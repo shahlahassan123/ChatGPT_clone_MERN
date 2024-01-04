@@ -22,27 +22,59 @@ function App() {
   /***
    * Fetching messages from the api
    */
-  const getMessages = async() =>{
-    const options = {
-      method: 'POST',
-      body: JSON.stringify({
-        model: "gpt-3.5-turbo",
-        messages: [{ role: "user", content: value }], 
-        max_tokens: 100,
-      }),
-      headers : {
-        'Content-Type': 'application/json'
+  // const getMessages = async() =>{
+  //   const options = {
+  //     method: 'POST',
+  //     body: JSON.stringify({
+  //       model: "gpt-3.5-turbo",
+  //       messages: [{ role: "user", content: value }], 
+  //       max_tokens: 100,
+  //     }),
+  //     headers : {
+  //       'Content-Type': 'application/json'
+  //     }
+  //   }
+
+  //   const response = await fetch("http://localhost:9000/completions", options)
+  //   const data = await response.json()
+  //   setMessage(data.choices[0].message.content)
+  //   setUserMessage(value)
+  //   setValue('')
+
+
+  // }
+
+  const getMessages = async () => {
+    try {
+      const options = {
+        method: 'POST',
+        body: JSON.stringify({
+          model: "gpt-3.5-turbo",
+          messages: [{ role: "user", content: value }], 
+          max_tokens: 100,
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
       }
+  
+      const response = await fetch("http://localhost:9000/completions", options);
+  
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} - ${response.statusText}`);
+      }
+  
+      const data = await response.json();
+      console.log(data)
+      setMessage(data.choices[0].message.content);
+      setUserMessage(value);
+      setValue('');
+    } catch (error) {
+      console.error("Error fetching messages:", error);
+      // Handle the error, e.g., show a user-friendly error message
     }
-
-    const response = await fetch("http://localhost:9000/completions", options)
-    const data = await response.json()
-    setMessage(data.choices[0].message.content)
-    setUserMessage(value)
-    setValue('')
-
-
   }
+  
   
   useEffect(()=>{
  
